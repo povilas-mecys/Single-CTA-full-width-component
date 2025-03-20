@@ -13,7 +13,7 @@
   padding: 4%;
   aspect-ratio: 3/2;
   width: 100%;
-  background-image: url(/img/bg.jpg);
+  background-image: url(../img/bg.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
