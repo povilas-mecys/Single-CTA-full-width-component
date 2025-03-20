@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Variables
+============================================================================= */
+
+// Colors
+// =============================================================================
+
+// ----------------- Core
+$black: #000;
+$brown: #4E3629;
+$xlbeige: #EFECE5;
+$lbeige: #D7D3C8;
+$beige: #B7B09C;
+$deige: #656156;
+$bae: #5b5b5b;
+$lgray: #F8F7F5;
+$gray: #F0F2F3;
+$mgray: #98A4AE;
+$dgray: #687078;
+$red: #C00404;
+$yellow: #FFC72C;
+$white: #FFF;
+
+// ----------------- Grays
+$gray_10: #EAEAEA;
+$gray_20: #CCCCCC;
+$gray_30: #B2B2B2;
+$gray_40: #999999;
+$gray_50: #808080;
+$gray_60: #666666;
+$gray_70: #4D4D4D;
+$gray_80: #333333;
+$gray_90: #222222;
+
+// ----------------- Text
+$tgray: #434343;
+
+// ----------------- Themes
+$blue:  #0a91c5;
+$mblue: #007DA0;
+$dblue: #004B5F; // Med //
+$navy: #002B52;
+$cgray: #3c3c3c; // Eng Footer //
+$dred: #970404; // Med //
+
+// ----------------- Additional Table Colors
+
+$lightgreen: #7fd9cb;
+$mediumgreen: #00b398;
+$darkgreen: #008672;
+$lightblue: #ace5f3;
+$mediumblue: #59cbe8;
+$navyblue: #003c71;
+$coolgray: #F0F3F5;
+
+// ----------------- Theme Color Array
+$theme_colors: (
+  (beige, $beige),
+  (brown, $brown),
+  (red, $red),
+  (yellow, $yellow)
+);
+
+
+// Base
+// =============================================================================
+
+$root_font_size: 16;
+
+$base_speed: .25s;
+$base_timing: ease;
+$base_delay: .05s;
+
+
+// Breakpoints
+// =============================================================================
+
+$mq_min_ht: 800;
+$mq_min_xs: 320;
+$mq_min_sm: 500;
+$mq_min_md: 740;
+$mq_min_lg: 980;
+$mq_min_xl: 1220;
+$mq_min_xxl: 1370;
+
+$min_xs: "screen and (min-width:" + ($mq_min_xs * 1px) + ")";
+$min_sm: "screen and (min-width:" + ($mq_min_sm * 1px) + ")";
+$min_md: "screen and (min-width:" + ($mq_min_md * 1px) + ")";
+$min_lg: "screen and (min-width:" + ($mq_min_lg * 1px) + ")";
+$min_xl: "screen and (min-width:" + ($mq_min_xl * 1px) + ")";
+$min_xxl: "screen and (min-width:" + ($mq_min_xxl * 1px) + ")";
+
+$max_xs: "screen and (max-width:" + ($mq_min_xs - 1px) + ")";
+$max_sm: "screen and (max-width:" + ($mq_min_sm - 1px) + ")";
+$max_md: "screen and (max-width:" + ($mq_min_md - 1px) + ")";
+$max_lg: "screen and (max-width:" + ($mq_min_lg - 1px) + ")";
+$max_xl: "screen and (max-width:" + ($mq_min_xl - 1px) + ")";
+$max_xxl: "screen and (max-width:" + ($mq_min_xxl - 1px) + ")";
+
+$and_max_sm: "and (max-width:" + ($mq_min_sm - 1px) + ")";
+$and_max_md: "and (max-width:" + ($mq_min_md - 1px) + ")";
+$and_max_lg: "and (max-width:" + ($mq_min_lg - 1px) + ")";
+$and_max_xl: "and (max-width:" + ($mq_min_xl - 1px) + ")";
+$and_max_xxl: "and (max-width:" + ($mq_min_xxl - 1px) + ")";
+
+
+// Spacing
+// =============================================================================
+
+$margin_sm: 40px;
+$margin_md: 60px;
+$margin_lg: 80px;
+$margin_xl: 100px;

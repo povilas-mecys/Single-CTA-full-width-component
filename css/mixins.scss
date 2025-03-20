@@ -1,0 +1,1120 @@
+/* ==========================================================================
+   Mixins
+============================================================================= */
+
+// Theme Mixins
+// =============================================================================
+
+@mixin theme_custom {
+
+  @each $label, $color in $theme_colors {
+
+    .theme_#{$label} & {}
+  }
+}
+
+@mixin theme(
+  $list: $theme_colors,
+  $style: "color"
+) {
+
+  @each $label, $color in $list {
+
+    .theme_#{$label} & {
+      @if($style == "color") {
+        color: $color;
+      } @else if($style == "background") {
+        background: $color;
+      } @else if($style == "border") {
+        border-color: $color;
+      } @else if($style == "button") {
+        background: $color;
+
+        @if $color == $yellow {
+          color: $brown;
+        } @else if($color == $red) {
+          color: $white;
+        } @else if($color == $brown) {
+          color: $white;
+        } @else if($color == "$white") {
+          color: $red;
+        }
+
+        &:focus,
+        &:hover {
+          background: $black;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+@mixin theme_direct(
+  $list: $theme_colors,
+  $style: "color"
+) {
+
+  @each $label, $color in $list {
+
+    &.theme_#{$label} {
+      @if($style == "color") {
+        color: $color;
+      } @else if($style == "background") {
+        background: $color;
+      } @else if($style == "border") {
+        border-color: $color;
+      }
+    }
+  }
+}
+
+// General Mixins
+// =============================================================================
+
+@mixin c($weight: 400) {
+  font-family: "CircularStd", sans-serif;
+  font-weight: $weight;
+}
+
+@mixin circular {
+  font-family: "CircularStd", sans-serif;
+}
+
+@mixin m($weight: 400) {
+  font-family: minion-pro, serif;
+  font-weight: $weight;
+}
+
+@mixin minion {
+  font-family: minion-pro, serif;
+}
+
+@mixin type_spread(
+  $min: (30, 40),
+  $max: (70, 60),
+  $mqs: (#{$min_sm}, #{$min_md}, #{$min_lg})
+) {
+  $dFS: (nth($max, 1) - nth($min, 1)) / length($mqs);
+  $dLH: (nth($max, 2) - nth($min, 2)) / length($mqs);
+
+  @if ($dFS < 1) {
+    @warn "The font-size spread is too thin for the type_spread mixin";
+  }
+
+  @if ($dLH < 1) {
+    @warn "The line-height spread is too thin for the type_spread mixin";
+  }
+
+  font-size: nth($min, 1) * 1px;
+  line-height: (nth($min, 2) / nth($min, 1));
+
+  @for $i from 1 through length($mqs) {
+
+    @media #{nth($mqs, $i)} {
+      $nFS: floor(nth($min, 1) + ($dFS * $i));
+      font-size: $nFS * 1px;
+      $nLH: floor(nth($min, 2) + ($dLH * $i));
+      line-height: ($nLH / $nFS);
+    }
+  }
+}
+
+@mixin mq_switch() {
+
+  &_sm {
+
+    @media #{$min_lg} {
+      display: none;
+    }
+  }
+
+  &_lg {
+
+    @media #{$max_lg} {
+      display: none;
+    }
+  }
+}
+
+// 1. IE 10/11 uses a non-standard
+// 2. Firefox
+
+@mixin columns($count, $gap: 0) {
+  column-count: $count;
+  column-gap: $gap;
+
+  & > * {
+    column-break-inside: avoid;
+    break-inside: avoid; // 1
+    page-break-inside: avoid; // 2
+  }
+}
+
+@mixin cover() {
+  height: 100%;
+  width: 100%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@mixin bleed($edge: 20px) {
+  height: calc(100% + #{$edge});
+  width: calc(100% + #{$edge});
+
+  position: absolute;
+  top: -#{$edge / 2};
+  left: -#{$edge / 2};
+}
+
+// Cover Image:
+// Use on wrapping element of img (<figure>, <picture>)
+// Will work like background-size: cover; but with static images
+// Won't scale it down though, so good to use with picturefill
+
+@mixin cover_image() {
+  position: relative;
+  z-index: 2;
+
+  img {
+    width: auto;
+    height: auto;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    min-width: 100% !important;
+    min-height: 100% !important;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+}
+
+@mixin center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+@mixin center_vertical() {
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+@mixin absolute_center() {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  margin: auto;
+}
+
+@mixin text_indent($height: 0) {
+  display: block;
+  line-height: $height;
+  overflow: hidden;
+  text-indent: 100%;
+}
+
+@mixin ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin gradient_right(
+  $startColor: black,
+  $endColor: white
+) {
+  background-color: $startColor;
+  background:
+    linear-gradient(
+      to right,
+        $startColor,
+        $endColor
+    );
+}
+
+@mixin gradient_down(
+  $startColor: black,
+  $endColor: white
+) {
+  background-color: $startColor;
+  background:
+    linear-gradient(
+      to bottom,
+        $startColor,
+        $endColor
+    );
+}
+
+@mixin font_smoothing() {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin kill_flicker() {
+  -webkit-font-smoothing: auto;
+  transform: translateZ(0);
+}
+
+@mixin word_break() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+
+// Margins
+// =============================================================================
+
+@mixin margined_top($m: 1) {
+  margin-top: $margin_sm * $m;
+}
+
+@mixin margined_bottom($m: 1) {
+  margin-bottom: $margin_sm * $m;
+}
+
+@mixin margined($m: 1) {
+  @include margined_top($m);
+  @include margined_bottom($m);
+}
+
+@mixin margined_md_top($m: 1) {
+  @include margined_top($m);
+
+  @media #{$min_md} {
+    margin-top: $margin_md * $m;
+  }
+}
+
+@mixin margined_md_bottom($m: 1) {
+  @include margined_bottom($m);
+
+  @media #{$min_md} {
+    margin-bottom: $margin_md * $m;
+  }
+}
+
+@mixin margined_md($m: 1) {
+  @include margined_md_top($m);
+  @include margined_md_bottom($m);
+}
+
+@mixin margined_lg_top($m: 1) {
+  @include margined_md_top($m);
+
+  @media #{$min_lg} {
+    margin-top: $margin_lg * $m;
+  }
+}
+
+@mixin margined_lg_bottom($m: 1) {
+  @include margined_md_bottom($m);
+
+  @media #{$min_lg} {
+    margin-bottom: $margin_lg * $m;
+  }
+}
+
+@mixin margined_lg($m: 1) {
+  @include margined_lg_top($m);
+  @include margined_lg_bottom($m);
+}
+
+@mixin margined_xl_top($m: 1) {
+  @include margined_lg_top($m);
+
+  @media #{$min_xl} {
+    margin-top: $margin_xl * $m;
+  }
+}
+
+@mixin margined_xl_bottom($m: 1) {
+  @include margined_lg_bottom($m);
+
+  @media #{$min_xl} {
+    margin-bottom: $margin_xl * $m;
+  }
+}
+
+@mixin margined_xl($m: 1) {
+  @include margined_xl_top($m);
+  @include margined_xl_bottom($m);
+}
+
+@mixin margined_top_none() {
+  margin-top: 0 !important;
+}
+
+@mixin margined_bottom_none() {
+  margin-bottom: 0 !important;
+}
+
+@mixin margined_none() {
+  @include margined_top_none;
+  @include margined_bottom_none;
+}
+
+
+// Padding
+// =============================================================================
+
+@mixin padded_top() {
+  padding-top: $margin_sm;
+}
+
+@mixin padded_bottom() {
+  padding-bottom: $margin_sm;
+}
+
+@mixin padded() {
+  @include padded_top;
+  @include padded_bottom;
+}
+
+@mixin padded_md_top() {
+  @include padded_top;
+
+  @media #{$min_md} {
+    padding-top: $margin_md;
+  }
+}
+
+@mixin padded_md_bottom() {
+  @include padded_bottom;
+
+  @media #{$min_md} {
+    padding-bottom: $margin_md;
+  }
+}
+
+@mixin padded_md() {
+  @include padded_md_top;
+  @include padded_md_bottom;
+}
+
+@mixin padded_lg_top() {
+  @include padded_md_top;
+
+  @media #{$min_lg} {
+    padding-top: $margin_lg;
+  }
+}
+
+@mixin padded_lg_bottom() {
+  @include padded_md_bottom;
+
+  @media #{$min_lg} {
+    padding-bottom: $margin_lg;
+  }
+}
+
+@mixin padded_lg() {
+  @include padded_lg_top;
+  @include padded_lg_bottom;
+}
+
+@mixin padded_xl_top() {
+  @include padded_lg_top;
+
+  @media #{$min_xl} {
+    padding-top: $margin_xl;
+  }
+}
+
+@mixin padded_xl_bottom() {
+  @include padded_lg_bottom;
+
+  @media #{$min_xl} {
+    padding-bottom: $margin_xl;
+  }
+}
+
+@mixin padded_xl() {
+  @include padded_xl_top;
+  @include padded_xl_bottom;
+}
+
+@mixin padded_top_none() {
+  padding-top: 0;
+}
+
+@mixin padded_bottom_none() {
+  padding-bottom: 0;
+}
+
+@mixin padded_none() {
+  @include padded_top_none;
+  @include padded_bottom_none;
+}
+
+
+// Fake Padding
+// =============================================================================
+
+@mixin fake_padded_right() {
+  padding-right: calc(20px + 1.04166667%);
+
+  @media #{$min_md} {
+    padding-right: calc((100% - 720px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_lg} {
+    padding-right: calc((100% - 960px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_xl} {
+    padding-right: calc((100% - 1200px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_xxl} {
+    padding-right: calc((100% - 1350px) / 2 + 1.04166667%);
+  }
+}
+
+@mixin fake_padded_left() {
+  padding-left: calc(20px + 1.04166667%);
+
+  @media #{$min_md} {
+    padding-left: calc((100% - 720px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_lg} {
+    padding-left: calc((100% - 960px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_xl} {
+    padding-left: calc((100% - 1200px) / 2 + 1.04166667%);
+  }
+
+  @media #{$min_xxl} {
+    padding-left: calc((100% - 1350px) / 2 + 1.04166667%);
+  }
+}
+
+@mixin fake_padded() {
+  @include fake_padded_right;
+  @include fake_padded_left;
+}
+
+
+// Fake Margin
+// =============================================================================
+
+@mixin fake_margined_right($m: 1) {
+  margin-right: calc((20px + 1.04166667%) * #{$m});
+
+  @media #{$min_md} {
+    margin-right: calc(((100% - 720px) / 2 + 1.04166667%) * #{$m});
+  }
+
+  @media #{$min_lg} {
+    margin-right: calc(((100% - 960px) / 2 + 1.04166667%) * #{$m});
+  }
+
+  @media #{$min_xl} {
+    margin-right: calc(((100% - 1200px) / 2 + 1.04166667%) * #{$m});
+  }
+}
+
+@mixin fake_margined_left($m: 1) {
+  margin-left: calc((20px + 1.04166667%) * #{$m});
+
+  @media #{$min_md} {
+    margin-left: calc(((100% - 720px) / 2 + 1.04166667%) * #{$m});
+  }
+
+  @media #{$min_lg} {
+    margin-left: calc(((100% - 960px) / 2 + 1.04166667%) * #{$m});
+  }
+
+  @media #{$min_xl} {
+    margin-left: calc(((100% - 1200px) / 2 + 1.04166667%) * #{$m});
+  }
+}
+
+@mixin fake_margined() {
+  @include fake_margined_right;
+  @include fake_margined_left;
+}
+
+
+// Helpers
+// =============================================================================
+
+@mixin block_left() {
+  float: left;
+
+  margin: 0 20px 20px 0;
+}
+
+@mixin block_right() {
+  float: right;
+
+  margin: 0 0 20px 20px;
+}
+
+@mixin block_center() {
+  margin: 20px auto;
+  text-align: center;
+}
+
+@mixin clearfix() {
+
+  &:after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+}
+
+@mixin no_select() {
+
+  &,
+  & * {
+    user-select: none;
+  }
+}
+
+@mixin hide() {
+  display: none !important;
+  visibility: hidden;
+}
+
+@mixin visually_hide() {
+  width: 1px;
+  height: 1px;
+
+  position: absolute;
+
+  border: 0;
+  clip: rect(0 0 0 0);
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+
+  &.focusable:active,
+  &.focusable:focus {
+    width: auto;
+    height: auto;
+
+    position: static;
+
+    clip: auto;
+    margin: 0;
+    overflow: visible;
+  }
+}
+
+@mixin offscreen() {
+  width: 1px;
+  height: 1px;
+
+  position: absolute;
+  left: -999px;
+
+  overflow: hidden;
+  z-index: -999;
+}
+
+@mixin video_frame() {
+  width: 100%;
+
+  position: relative;
+
+  padding-bottom: 56.25%;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+
+// Transitions
+// =============================================================================
+
+@mixin transition_hide() {
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity $base_speed,
+    visibility $base_speed;
+  visibility: hidden;
+}
+
+@mixin transition_show() {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+
+// Images
+// =============================================================================
+
+@mixin image_1_1() {
+  padding-top: 100%;
+}
+
+@mixin image_16_9() {
+  padding-top: (9 / 16) * 100%;
+}
+
+@mixin image_3_2() {
+  padding-top: (2 / 3) * 100%;
+}
+
+@mixin responsive_image() {
+  display: block;
+
+  picture {
+    display: block;
+  }
+
+  img {
+    display: block;
+
+    width: 100%;
+  }
+}
+
+
+// Layout
+// =============================================================================
+
+@mixin space_out() {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Not to be used with a form container */
+/* Use -webkit-overflow-scrolling: auto instead */
+@mixin fake_scroll($touch: true) {
+  overflow-y: scroll;
+
+  @if $touch {
+    -webkit-overflow-scrolling: touch;
+  } @else {
+    -webkit-overflow-scrolling: auto;
+  }
+}
+
+
+// Type Base
+// =============================================================================
+
+@mixin h1() {
+  @include m(700);
+
+  font-size: 24px;
+  line-height: (32 / 24);
+
+  @media #{$min_md} {
+    font-size: 36px;
+    line-height: (46 / 36);
+  }
+
+  @media #{$min_lg} {
+    font-size: 42px;
+    line-height: (52 / 42);
+  }
+
+  @media #{$min_xl} {
+    font-size: 46px;
+    line-height: (52 / 46);
+  }
+}
+
+@mixin h2($q: $min_lg) {
+  @include c(400);
+
+  font-size: 24px;
+  line-height: (32 / 24);
+
+  @media #{$q} {
+    font-size: 36px;
+    line-height: (46 / 36);
+  }
+}
+
+@mixin h3($q: $min_lg) {
+  @include c(400);
+
+  font-size: 18px;
+  line-height: (26 / 18);
+
+  @if $q != false {
+
+    @media #{$q} {
+      font-size: 24px;
+      line-height: (32 / 24);
+    }
+  }
+}
+
+@mixin h4() {
+  @include c(400);
+
+  font-size: 18px;
+  line-height: (26 / 18);
+  text-transform: uppercase;
+}
+
+@mixin h5() {
+  @include m(700);
+
+  font-size: 18px;
+  line-height: (32 / 18);
+}
+
+@mixin h6() {
+  @include c(400);
+
+  font-size: 11px;
+  letter-spacing: 1.25px;
+  line-height: (19 / 11);
+  text-transform: uppercase;
+
+  @media #{$min_sm} {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    line-height: (22 / 13);
+  }
+}
+
+@mixin intro_text($q: $min_lg) {
+  @include m;
+
+  font-size: 18px;
+  line-height: (28 / 18);
+
+  @media #{$q} {
+    font-size: 24px;
+    line-height: (38 / 24);
+  }
+}
+
+@mixin body_text($q: $min_md) {
+  @include m;
+
+  font-size: 16px;
+  line-height: (26 / 16);
+
+  @if $q != false {
+
+    @media #{$q} {
+      font-size: 18px;
+      line-height: (32 / 18);
+    }
+  }
+}
+
+@mixin label_text() {}
+
+@mixin caption_text() {
+  @include c(400);
+
+  font-size: 14px;
+  line-height: (26 / 14);
+}
+
+
+// Buttons
+// =============================================================================
+
+@mixin button() {
+  cursor: pointer;
+  text-align: center;
+}
+
+@mixin button_layout($layout: true) {
+
+  @if $layout {
+
+    [class*="label"] {
+      display: inline;
+    }
+
+    [class*="icon"] {
+      display: inline-block;
+      vertical-align: middle;
+
+      @media print {
+        display: none;
+      }
+    }
+  }
+}
+
+@mixin button_text() {}
+
+@mixin button_plain(
+  $c: $red,
+  $hc: $black
+) {
+  @include button_layout;
+
+  color: $c;
+  transition:
+    background .25s,
+    color .25s;
+
+  [class*="label"] {
+    @include c;
+
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-right: 2px;
+    text-transform: uppercase;
+
+    @media #{$min_sm} {
+      font-size: 13px;
+    }
+  }
+
+  [class$="icon"] {
+    height: 14px;
+    width: 14px;
+
+    position: relative;
+    top: -2px;
+  }
+
+  [class$="default"],
+  [class$="action"] {
+    position: absolute;
+    top: 50%;
+    left: 0;
+
+    transform: translate(0, -50%);
+    transition: opacity .25s;
+  }
+
+  [class$="default"] {}
+
+  [class$="action"] {
+    opacity: 0;
+  }
+
+  &:focus,
+  &:hover {
+    color: $hc;
+
+    [class$="default"] {
+      opacity: 0;
+    }
+
+    [class$="action"] {
+      opacity: 1;
+    }
+  }
+}
+
+@mixin button_fill(
+  $b: $red,
+  $hb: $black,
+  $c: $white,
+  $hc: $white,
+  $h: true
+) {
+  background: $b;
+  color: $c;
+  padding: 15px 20px 16px;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    background .25s,
+    color .25s;
+
+  @media #{$min_md} {
+    padding: 22px 30px 23px;
+  }
+
+  &:focus,
+  &:hover {
+
+    @if $h {
+      background: $hb;
+      color: $hc;
+    }
+  }
+
+  [class*="label"] {
+    @include c;
+
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    line-height: (20 / 13);
+  }
+
+  [class*="icon"] {
+    position: relative;
+    top: -1px;
+
+    display: inline-block;
+    margin-left: 2px;
+  }
+}
+
+@mixin button_ghost() {
+  background: $white;
+  border: 1px solid $gray;
+  border-radius: 40px;
+  box-shadow: 0 0 9px 0 rgba($black, .12);
+  padding: 8px 30px;
+  transition:
+    background .25s,
+    border .25s,
+    opacity .25s,
+    visibility .25s;
+  white-space: nowrap;
+
+  [class*="label"] {
+    @include h6;
+    @include c(400);
+
+    color: $brown;
+    display: inline-block;
+    vertical-align: middle;
+    transition: color .25s;
+  }
+
+  [class*="icon"] {
+    position: relative;
+    top: -1px;
+
+    color: $red;
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+    transition: color .25s;
+  }
+
+  &:focus,
+  &:hover {
+    background: $red;
+    border-color: transparent;
+
+    [class*="label"] {
+      color: $white;
+    }
+
+    [class*="icon"] {
+      color: $white;
+    }
+  }
+}
+
+
+// Input Focus
+// =============================================================================
+
+// Uses 'What input ?' detection - https://github.com/ten1seven/what-input
+
+@mixin focus_outline_none() {
+
+  [data-whatinput="mouse"] &:focus,
+  [data-whatinput="touch"] &:focus {
+    outline: none;
+  }
+}
+
+
+
+// ============== Pov Mixins
+
+@mixin button_fill_icon(
+  $b: $red,
+  $hb: $black,
+  $c: $white,
+  $hc: $white,
+  $h: true
+) {
+  background: $b;
+  color: $c;
+  padding: 15px 35px 16px 20px;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    background .25s,
+    color .25s;
+
+  @media #{$min_md} {
+    padding: 22px 45px 23px 30px;
+  }
+
+  &:focus,
+  &:hover {
+
+    @if $h {
+      background: $hb;
+      color: $hc;
+    }
+  }
+
+  [class*="label"] {
+    @include c;
+
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    line-height: (20 / 13);
+  }
+
+  [class$="icon"] {
+    height: 14px;
+    width: 14px;
+    position: relative;
+    top: 0;
+    margin-left: 5px;
+  }
+
+  [class$="default"],
+  [class$="action"] {
+    position: absolute;
+    top: 50%;
+    left: 0;
+
+    transform: translate(0, -50%);
+    transition: opacity .25s;
+  }
+
+  [class$="default"] {}
+
+  [class$="action"] {
+    opacity: 0;
+  }
+
+  &:focus,
+  &:hover {
+    color: $hc;
+
+    [class$="default"] {
+      opacity: 0;
+    }
+
+    [class$="action"] {
+      opacity: 1;
+    }
+  }
+}
